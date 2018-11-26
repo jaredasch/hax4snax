@@ -20,12 +20,26 @@ ______   ______   __   __   __       ______   _______
 
 ==============================================================
 
+zhaoM -- 2018-11-20 8:49
+--------------------------------------------------------------
+finished sitemap with Peter
+
 narangA -- 2018-11-21 10:45
 --------------------------------------------------------------
 created design document, repo
 
+cwalinaP -- 2018-11-21 1:15
+redrew arrows to show that the restaurant menu actually redirects to the
+  search page, which shows foods similar to the food a user chooses from
+  the menu
 ==============================================================
 
+zhaoM -- 2018-11-25 21:31
+--------------------------------------------------------------
+fixed typos
+added more labels to clarify the processes shown by the arrows
+
+==============================================================
 narangA -- 2018-11-26 0:27
 --------------------------------------------------------------
 updated design document with changes from class on Wednesday
