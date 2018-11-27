@@ -46,6 +46,10 @@ added more labels to clarify the processes shown by the arrows
   (i.e. how the restaurant search process is slightly different
   from the food search, but use the same website components)
 
+aschJ -- 2018-11-25 22:15
+--------------------------------------------------------------
+fixed component map by making a interactions bewteen components more clear
+
 ==============================================================
 narangA -- 2018-11-26 0:27
 --------------------------------------------------------------
@@ -70,5 +74,10 @@ zhaoM -- 2018-11-26 22:30
 Added navigation bar at the top of the page and the search bar.
   Both currently lead nowhere.
   Have to do: loop for cards.
+
+aschJ -- 2018-11-26 23:00
+--------------------------------------------------------------
+further looked into API usage and mapped out in more detail what
+endpoints our application will use  
 
 ==============================================================
