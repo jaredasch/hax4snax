@@ -23,41 +23,52 @@ ______   ______   __   __   __       ______   _______
 zhaoM -- 2018-11-20 8:49
 --------------------------------------------------------------
 finished sitemap with Peter
+==============================================================
 
 narangA -- 2018-11-21 10:45
 --------------------------------------------------------------
 created design document, repo
 
 cwalinaP -- 2018-11-21 1:15
-redrew arrows to show that the restaurant menu actually redirects to the
-  search page, which shows foods similar to the food a user chooses from
-  the menu
+--------------------------------------------------------------
+redrew arrows to show that the restaurant menu actually
+  redirects to the search page, which shows foods similar to
+  the food a user chooses from the menu
+
+narangA -- 2018-11-21 14:47  --------------------------------------------------------------
+created ReadMe and Devlog
 ==============================================================
 
 zhaoM -- 2018-11-25 21:31
 --------------------------------------------------------------
 fixed typos
 added more labels to clarify the processes shown by the arrows
+  (i.e. how the restaurant search process is slightly different
+  from the food search, but use the same website components)
 
 ==============================================================
 narangA -- 2018-11-26 0:27
 --------------------------------------------------------------
 updated design document with changes from class on Wednesday
 
-==============================================================
-
 narangA -- 2018-11-26 12:50
 --------------------------------------------------------------
 modified due dates for task breakdown
 
-==============================================================
+zhaoM -- 2018-11-26 15:30
+--------------------------------------------------------------
+Created basic landing site with separate areas for the search
+  bar and cards that will be used to display the foods or
+  restaurants the user searches
 
 CwalinaP -- 2018-11-26 20:24
 --------------------------------------------------------------
 Added a basic template for the recipe page
-==============================================================
 
-
-narangA -- 2018-11-21 14:47
+zhaoM -- 2018-11-26 22:30
 --------------------------------------------------------------
-created ReadMe and Devlog
+Added navigation bar at the top of the page and the search bar.
+  Both currently lead nowhere.
+  Have to do: loop for cards.
+
+==============================================================
