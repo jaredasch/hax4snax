@@ -7,7 +7,12 @@ FOOD2FORK_KEY = "701c0f889e35ba76a0d6f8ae4996c21e"
 
 @app.route("/")
 def index():
-    return render_template('index.html')
+    req_url = "https://developers.zomato.com/api/v2.1/search?entity_id=280&entity_type=city&sort=rating&order=desc"
+    header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "user_key": ZOMATO_KEY}
+    req = urllib.request.Request(req_url, headers = header)
+    json_response = json.loads(urllib.request.urlopen(req).read())
+    popular_restaurants = [{"title": restaurant["restaurant"]["name"], "img": restaurant["restaurant"]["featured_image"], "link": url_for("restaurant", id=restaurant["restaurant"]["R"]["res_id"]), "desc": ("%s<br><strong>Tags: </strong> %s") % (restaurant["restaurant"]["location"]["address"], restaurant["restaurant"]["cuisines"])} for restaurant in json_response["restaurants"]]
+    return render_template('index.html', results=popular_restaurants)
 
 @app.route("/search", methods = ["POST"])
 def search():
