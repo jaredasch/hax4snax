@@ -1,3 +1,4 @@
+
 .topnav {
     background-color: #333;
     overflow: hidden;
@@ -70,4 +71,17 @@
   overflow-y: scroll;
   height: 70%;
   */
+}
+
+body {
+    background-color: whitesmoke;
+}
+
+.card {
+    background-color: white;
+    margin: 10px;
+}
+
+.card-title {
+    color: crimson;
 }

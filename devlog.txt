@@ -78,6 +78,14 @@ Added navigation bar at the top of the page and the search bar.
 aschJ -- 2018-11-26 23:00
 --------------------------------------------------------------
 further looked into API usage and mapped out in more detail what
-endpoints our application will use  
+endpoints our application will use
+
+==============================================================
+
+aschJ -- 2018-11-27 18:41
+--------------------------------------------------------------
+Reorganized file system with static folder
+Touched up CSS for the homepage
+Added search functionality for both restaurants and recipes
 
 ==============================================================
