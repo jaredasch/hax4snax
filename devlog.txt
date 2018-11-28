@@ -93,3 +93,10 @@ aschJ -- 2018-11-27 18:56
 Added popular restaurants to the homepage
 
 ==============================================================
+
+aschJ -- 2018-11-28 12:41
+--------------------------------------------------------------
+Change default image if none provided by API, fixed aspect ration for images
+Restaurant and recipe checkboxes checked by default
+
+==============================================================

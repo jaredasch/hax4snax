@@ -11,12 +11,6 @@
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
 	</head>
 	<body>
-		<!-- <div class="topnav">
-			<a class="active" href="#home">Home</a>
-			<a href="#news">News</a>
-			<a href="#contact">Contact</a>
-			<a href="#about">About</a>
-		</div> -->
 		<div class = "container">
 			<div class = "search" style="height:300px;">
 				<form action="{{ url_for('search') }}" method="POST" style="min-width:80%;">
@@ -28,16 +22,16 @@
 						<input type="text" class="form-control" name="query" placeholder="recipes, restaurants, or cuisines" aria-describedby="inputGroupPrepend" required>
                         <input type = "submit" value="Search" class="btn btn-primary" style="border-radius: 0px 5px 5px 0px; background-color: crimson; border-color: crimson;">
                         <div class="invalid-feedback">
-							Please choose a username.
+							Please enter a query
 						</div>
 					</div>
                     <div id = "search-selectors" style = "padding: 10px; text-align: center;">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" name = "recipes" type="checkbox" id="recipe-checkbox">
+                            <input class="form-check-input" name = "recipes" type="checkbox" id="recipe-checkbox" checked>
                             <label class="form-check-label" for="recipe-checkbox">Recipes</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" name = "restaurants" type="checkbox" id="restaurant-checkbox">
+                            <input class="form-check-input" name = "restaurants" type="checkbox" id="restaurant-checkbox" checked>
                             <label class="form-check-label" for="restaurant-checkbox">Restaurants</label>
                         </div>
                     </div>
@@ -49,8 +43,10 @@
 				<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" style="padding:10px;">
                     <div class = "card">
                         {% if item.img %}
-                            <img class="card-img-top" src="{{ item.img }}" alt="Featured Image">
-                        {% endif %}
+                        	<div class = "img-container" style="padding-top: 50%; background-size: cover; background-position: center; background-image: url('{{ item.img }}')"></div>
+						{% else %}
+							<div class = "img-container" style="padding-top: 50%; background-size: contain; background-position: center; background-image: url({{ url_for('static', filename='img/no_image_available.png') }}); background-repeat: no-repeat;"></div>
+                    	{% endif %}
                         <div class="card-body" style="height: 100%;">
                             <h5 class="card-title">{{ item.title }}</h5>
                             <p class="card-text">{{ item.desc | safe }}</p>
