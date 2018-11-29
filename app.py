@@ -1,10 +1,14 @@
-from flask import Flask, render_template, request, url_for
-import urllib, json
+from flask import Flask, render_template, request, url_for,flash,session,redirect
+import urllib, json,os
+from util import baseHelpers as db
+
 app = Flask(__name__)
+app.secret_key = os.urandom(32)
 
 ZOMATO_KEY = "3188b26a3af82c1b97b152a900658fc6"
 FOOD2FORK_KEY = "701c0f889e35ba76a0d6f8ae4996c21e"
-
+def loggedIn():
+    return "id" in session
 @app.route("/")
 def index():
     req_url = "https://developers.zomato.com/api/v2.1/search?entity_id=280&entity_type=city&sort=rating&order=desc"
@@ -13,6 +17,57 @@ def index():
     json_response = json.loads(urllib.request.urlopen(req).read())
     popular_restaurants = [{"title": restaurant["restaurant"]["name"], "img": restaurant["restaurant"]["featured_image"], "link": url_for("restaurant", id=restaurant["restaurant"]["R"]["res_id"]), "desc": ("%s<br><strong>Tags: </strong> %s") % (restaurant["restaurant"]["location"]["address"], restaurant["restaurant"]["cuisines"])} for restaurant in json_response["restaurants"]]
     return render_template('index.html', results=popular_restaurants)
+
+@app.route("/login")
+def login():
+    if loggedIn():
+        return redirect(url_for('index'))
+    return render_template('login.html')
+
+@app.route("/auth", methods = ["POST"])
+def auth():
+    user_data = db.get_all_user_data()
+    username=request.form.get("username")
+    password=request.form.get("password")
+
+    if username in user_data:
+        if password == user_data[username]:
+            id = db.getUserId(username)
+            session["id"] = id
+        else:
+            flash("Invalid password")
+    else:
+        flash("Invalid username")
+    return redirect(url_for('login'))
+
+@app.route("/register")
+def register():
+    return render_template("register.html")
+
+@app.route("/registerAuth", methods = ["POST"])
+def registerAuth():
+
+    username = request.form.get("username")
+    password = request.form.get("password")
+    password2 = request.form.get("password2")
+    user_data = db.get_all_user_data()
+    if username in user_data:
+        flash("Username already exists")
+        return redirect(url_for("register"))
+
+    elif password != password2:
+        flash("Input Same Password in Both Fields!")
+        return redirect(url_for("register"))
+    else:
+        db.add_user(username, password)
+        flash("Successfully Registered, Now Sign In!")
+        return redirect(url_for('login'))
+
+@app.route("/logout")
+def logout():
+    session.pop("id")
+    return redirect(url_for("index"))
+
 
 @app.route("/search", methods = ["POST"])
 def search():
@@ -51,6 +106,7 @@ def recipe(id):
 #                             img = "https://www.platingsandpairings.com/wp-content/uploads/2015/10/Fresh-Linguin-with-Roasted-Fennel-4-e1446066750773.jpg",
 #                             dict = Dictionary,
 #                             description = desc)
+
 
 
 if __name__ == "__main__" :

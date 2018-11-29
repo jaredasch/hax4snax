@@ -1,0 +1,14 @@
+{% extends "base2.html" %}
+{% block content %}
+{% set msgs = get_flashed_messages() %}
+{% for each in msgs %}
+       {{each}}
+       <br>
+{% endfor %}
+<form action ="/registerAuth" method="POST" >
+    <h3>Username: <input type= "text" name="username" required> <br><br>
+    Password: <input type= "password" name="password" required><br><br>
+    Enter Password Again: <input type= "password" name="password2" required><br><br>
+    <input type="submit" name="signup" value="Sign Up"></h3>
+</form>
+{% endblock %}
