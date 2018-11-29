@@ -104,5 +104,6 @@ Restaurant and recipe checkboxes checked by default
 cwalinaP -- 2018-11-9 12:43
 --------------------------------------------------------------
 Added basic account functionality
+Also added hashed passwords
 
 ==============================================================

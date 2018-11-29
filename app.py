@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, url_for,flash,session,redirect
 import urllib, json,os
 from util import baseHelpers as db
+from passlib.hash import md5_crypt
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
@@ -8,7 +9,7 @@ app.secret_key = os.urandom(32)
 ZOMATO_KEY = "3188b26a3af82c1b97b152a900658fc6"
 FOOD2FORK_KEY = "701c0f889e35ba76a0d6f8ae4996c21e"
 def loggedIn():
-    return "id" in session
+    return "username" in session
 @app.route("/")
 def index():
     req_url = "https://developers.zomato.com/api/v2.1/search?entity_id=280&entity_type=city&sort=rating&order=desc"
@@ -31,9 +32,8 @@ def auth():
     password=request.form.get("password")
 
     if username in user_data:
-        if password == user_data[username]:
-            id = db.getUserId(username)
-            session["id"] = id
+        if md5_crypt.verify(password, user_data[username]):
+            session["username"] = username
         else:
             flash("Invalid password")
     else:
@@ -59,13 +59,13 @@ def registerAuth():
         flash("Input Same Password in Both Fields!")
         return redirect(url_for("register"))
     else:
-        db.add_user(username, password)
+        db.add_user(username, md5_crypt.encrypt(password))
         flash("Successfully Registered, Now Sign In!")
         return redirect(url_for('login'))
 
 @app.route("/logout")
 def logout():
-    session.pop("id")
+    session.pop("username")
     return redirect(url_for("index"))
 
 
