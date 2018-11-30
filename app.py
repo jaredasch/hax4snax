@@ -1,7 +1,10 @@
-from flask import Flask, render_template, request, url_for,flash,session,redirect
-import urllib, json,os
+import urllib, json, os # Standard Library
+
+from flask import Flask, render_template, request, url_for,flash,session,redirect # Related third-party
+
+from passlib.hash import md5_crypt #Local application
 from util import baseHelpers as db
-from passlib.hash import md5_crypt
+
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
@@ -65,6 +68,9 @@ def registerAuth():
 
 @app.route("/logout")
 def logout():
+    if "username" not in session:
+        flash("You tried to log out without being logged in")
+        return redirect(url_for("index"))
     session.pop("username")
     return redirect(url_for("index"))
 

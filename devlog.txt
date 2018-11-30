@@ -101,9 +101,13 @@ Restaurant and recipe checkboxes checked by default
 
 ==============================================================
 
-cwalinaP -- 2018-11-9 12:43
+cwalinaP -- 2018-11-29 12:43
 --------------------------------------------------------------
 Added basic account functionality
 Also added hashed passwords
 
 ==============================================================
+
+narangA -- 2018-11-30 12:55
+--------------------------------------------------------------
+Added base case for logout, fixed import structure
