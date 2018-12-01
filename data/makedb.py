@@ -6,7 +6,7 @@ c = db.cursor()
 command = "CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT,username TEXT UNIQUE,password TEXT)"
 c.execute(command)
 #create favorites
-command = "CREATE TABLE favorites(username TEXT, url TEXT)"
+command = "CREATE TABLE favorites(username TEXT, recipe_id TEXT, api INTEGER)"
 c.execute(command)
 db.commit()
 db.close()
