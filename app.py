@@ -1,4 +1,4 @@
-import urllib, json, os # Standard Library
+import urllib, json, os,sys # Standard Library
 
 from flask import Flask, render_template, request, url_for,flash,session,redirect # Related third-party
 
@@ -11,6 +11,23 @@ app.secret_key = os.urandom(32)
 
 ZOMATO_KEY = "3188b26a3af82c1b97b152a900658fc6"
 FOOD2FORK_KEY = "701c0f889e35ba76a0d6f8ae4996c21e"
+
+if len(sys.argv) == 3:
+    print('ZomatoKey:')
+    print(sys.argv[1])
+    ZOMATO_KEY = sys.argv[1]
+    print('Food2fork key:')
+    print(sys.argv[2])
+    FOOD2FORK_KEY = sys.argv[2]
+    try:
+        index()
+        #pls insert any others funct that use api keys here
+    except:
+        print('You Have a bad api key')
+        sys.exit()
+
+
+
 def loggedIn():
     return "username" in session
 @app.route("/")

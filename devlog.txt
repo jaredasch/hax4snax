@@ -117,3 +117,12 @@ Added base case for logout, fixed import structure
 narangA -- 2018-12-02 13:32
 --------------------------------------------------------------
 Created Requirements.txt
+==============================================================
+
+cwalinaP -- 2018-12-03 13:15
+--------------------------------------------------------------
+Made functs for removing and adding favorites from db
+and added ability to provide your own api keys in the command
+line when starting the app Ex: python app.py ZOMATO_KEY FOOD2FORK_KEY
+Also added a check for any bad api keys
+==============================================================
