@@ -48,7 +48,7 @@ added more labels to clarify the processes shown by the arrows
 
 aschJ -- 2018-11-25 22:15
 --------------------------------------------------------------
-fixed component map by making a interactions bewteen components more clear
+fixed component map by making a interactions between components more clear
 
 ==============================================================
 narangA -- 2018-11-26 0:27
@@ -131,4 +131,5 @@ narangA -- 2018-12-03 16:32
 --------------------------------------------------------------
 Commented App.Py
 reassessed and assigned new tasks to team based off demo functionality
+Wrote README
 ==============================================================
