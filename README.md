@@ -17,6 +17,7 @@ Storing user passwords as plaintext is a massive security vunerability and shoul
 # To run our project:
 
 1. Clone this repository
+
 ```
 $ git clone https://github.com/narang-amit/hax4snax.git
 ```
@@ -34,12 +35,14 @@ $ . tm/bin/activate
 (tm) $ pip3 install wheel
 (tm) $ pip3 install flask
 (tm) $ pip3 install passlib
+```
 
 4. Go to the folder
 
 ```
 (tm) $ cd hax4snax
 ```
+
 5. Create two text files, where you'll later store your API keys
 
 ```
@@ -53,8 +56,9 @@ $ . tm/bin/activate
   b) Navigate to https://www.food2fork.com/default/user/register?_next=%2Fuser%2Fapi, create an account, generate an API key, and insert it into f2fapi.txt
 
 5. Run app.py
+
 ```
 (tm) $ python app.py
 ```
 
-6. Navigative to `localhost:5000` on your web browser
+6. Navigate to `localhost:5000` on your web browser
