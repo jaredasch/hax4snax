@@ -1,4 +1,4 @@
-import urllib, json, os,sys # Standard Library
+import urllib, json, os# Standard Library
 
 from flask import Flask, render_template, request, url_for,flash,session,redirect # Related third-party
 
@@ -9,22 +9,20 @@ from util import baseHelpers as db
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
 
-ZOMATO_KEY = "3188b26a3af82c1b97b152a900658fc6"
-FOOD2FORK_KEY = "701c0f889e35ba76a0d6f8ae4996c21e"
+with open('api.json', 'r') as file:
+    api_dict = json.load(file)
 
-if len(sys.argv) == 3:
-    print('ZomatoKey:')
-    print(sys.argv[1])
-    ZOMATO_KEY = sys.argv[1]
-    print('Food2fork key:')
-    print(sys.argv[2])
-    FOOD2FORK_KEY = sys.argv[2]
-    try:
-        index()
-        #pls insert any others funct that use api keys here
-    except:
-        print('You Have a bad api key')
-        sys.exit()
+ZOMATO_KEY = api_dict["ZOMATO_KEY"]
+FOOD2FORK_KEY = api_dict["FOOD2FORK_KEY"]
+#test for a bad key then stop the app if it doesnt work
+try:#as we incorporate more api just insert something that works when the api key works so when a bad key is used we'll know
+    req_url = "https://developers.zomato.com/api/v2.1/search?entity_id=280&entity_type=city&sort=rating&order=desc"
+    header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "user_key": ZOMATO_KEY}
+    req = urllib.request.Request(req_url, headers = header) # here we connect to the Zomato API to get restaurant info
+    json_response = json.loads(urllib.request.urlopen(req).read())
+except:
+    print(" * Api key not valid!")
+    exit()
 
 
 

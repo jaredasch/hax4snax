@@ -133,3 +133,9 @@ Commented App.Py
 reassessed and assigned new tasks to team based off demo functionality
 Wrote README
 ==============================================================
+
+cwalinaP -- 2018-12-03 17:20
+--------------------------------------------------------------
+Removed ability to specify api keys in command line now instead
+go to the api.json file to input your keys
+==============================================================

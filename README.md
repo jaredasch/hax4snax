@@ -43,11 +43,11 @@ $ . tm/bin/activate
 (tm) $ cd hax4snax
 ```
 
-5. Create two text files, where you'll later store your API keys
+5. Edit the .json file called api.json and insert your api keys accordingly
 
 ```
-(tm) $ touch zomapi.txt
-(tm) $ touch f2fapi.txt
+"ZOMATO_KEY":"<insert key here>",
+"FOOD2FORK_KEY": "<insert key here>"
 ```
 
 5. Secure the API keys.
