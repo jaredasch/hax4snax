@@ -29,70 +29,76 @@ if len(sys.argv) == 3:
 
 
 def loggedIn():
+    # check if user is logged in (True if yes, False if not)
     return "username" in session
-@app.route("/")
+@app.route("/") # Landing page
 def index():
+    # Our default home page before a user is logged in is to display the most popular restaurants
     req_url = "https://developers.zomato.com/api/v2.1/search?entity_id=280&entity_type=city&sort=rating&order=desc"
     header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "user_key": ZOMATO_KEY}
-    req = urllib.request.Request(req_url, headers = header)
+    req = urllib.request.Request(req_url, headers = header) # here we connect to the Zomato API to get restaurant info
     json_response = json.loads(urllib.request.urlopen(req).read())
     popular_restaurants = [{"title": restaurant["restaurant"]["name"], "img": restaurant["restaurant"]["featured_image"], "link": url_for("restaurant", id=restaurant["restaurant"]["R"]["res_id"]), "desc": ("%s<br><strong>Tags: </strong> %s") % (restaurant["restaurant"]["location"]["address"], restaurant["restaurant"]["cuisines"])} for restaurant in json_response["restaurants"]]
     return render_template('index.html', results=popular_restaurants)
 
-@app.route("/login")
+@app.route("/login") # Login Page
 def login():
     if loggedIn():
+        # if the user is logged in already, it will redirect them to the home page
         return redirect(url_for('index'))
+    # if the user is not logged in, it renders the static login template
     return render_template('login.html')
 
-@app.route("/auth", methods = ["POST"])
+@app.route("/auth", methods = ["POST"]) # Authentification Page
 def auth():
     user_data = db.get_all_user_data()
-    username=request.form.get("username")
-    password=request.form.get("password")
+    username=request.form.get("username") # Get Username
+    password=request.form.get("password") # Get Password
 
-    if username in user_data:
-        if md5_crypt.verify(password, user_data[username]):
-            session["username"] = username
+    if username in user_data: # check if the username is a valid username
+        if md5_crypt.verify(password, user_data[username]): # check if the password aligns with the username
+            session["username"] = username # login the user
         else:
-            flash("Invalid password")
+            flash("Invalid password") # display error message
     else:
-        flash("Invalid username")
-    return redirect(url_for('login'))
+        flash("Invalid username") # display error message
+    return redirect(url_for('login')) # send back to login page
 
-@app.route("/register")
+@app.route("/register") # Register Page
 def register():
+    # renders the static register page
     return render_template("register.html")
 
 @app.route("/registerAuth", methods = ["POST"])
-def registerAuth():
+def registerAuth(): # Register Authentification Page
 
     username = request.form.get("username")
     password = request.form.get("password")
     password2 = request.form.get("password2")
+    # Get form input
     user_data = db.get_all_user_data()
-    if username in user_data:
+    if username in user_data: # check if user already exists
         flash("Username already exists")
         return redirect(url_for("register"))
 
-    elif password != password2:
+    elif password != password2: # check to make sure the passwords match
         flash("Input Same Password in Both Fields!")
         return redirect(url_for("register"))
-    else:
+    else: # Create new user
         db.add_user(username, md5_crypt.encrypt(password))
         flash("Successfully Registered, Now Sign In!")
         return redirect(url_for('login'))
 
-@app.route("/logout")
+@app.route("/logout") # Logout Function
 def logout():
-    if "username" not in session:
+    if not loggedIn(): # Check if the user is logged in
         flash("You tried to log out without being logged in")
         return redirect(url_for("index"))
-    session.pop("username")
+    session.pop("username") # Remove user from session if they were logged in
     return redirect(url_for("index"))
 
 
-@app.route("/search", methods = ["POST"])
+@app.route("/search", methods = ["POST"]) # Searching Functionality
 def search():
     query = request.form.get("query")
     results = []
@@ -110,11 +116,11 @@ def search():
         results.extend([{"title": recipe["title"], "img": recipe["image_url"], "link": url_for("recipe", id=recipe["recipe_id"]), "desc": "from %s" % (recipe["publisher"])} for recipe in json_response["recipes"]])
     return render_template('index.html', results=results);
 
-@app.route("/restaurant/<id>")
+@app.route("/restaurant/<id>") # Temporary Restaurant Card Depiction
 def restaurant(id):
     return "Temp"
 
-@app.route("/recipe/<id>")
+@app.route("/recipe/<id>") # Temporary Recipe Card Depiction
 def recipe(id):
     return "Temp"
 
@@ -130,7 +136,6 @@ def recipe(id):
 #                             dict = Dictionary,
 #                             description = desc)
 
-
-if __name__ == "__main__" :
+if __name__ == "__main__" : # Run the App
     app.debug = True
     app.run()

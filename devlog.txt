@@ -126,3 +126,9 @@ and added ability to provide your own api keys in the command
 line when starting the app Ex: python app.py ZOMATO_KEY FOOD2FORK_KEY
 Also added a check for any bad api keys
 ==============================================================
+
+narangA -- 2018-12-03 16:32
+--------------------------------------------------------------
+Commented App.Py
+reassessed and assigned new tasks to team based off demo functionality
+==============================================================
