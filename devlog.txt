@@ -139,3 +139,10 @@ cwalinaP -- 2018-12-03 17:20
 Removed ability to specify api keys in command line now instead
 go to the api.json file to input your keys
 ==============================================================
+
+cwalinaP -- 2018-12-04 17:25
+--------------------------------------------------------------
+Clicking on a restaurant now actually takes you somewhere
+Still have to spruce up the css and find a way to make the
+menu look nicer
+==============================================================

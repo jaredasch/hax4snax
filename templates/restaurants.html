@@ -1,0 +1,22 @@
+{% extends "base2.html" %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-4">
+      <h1>{{name}}</h1>
+      <p>Adress:{{address}}
+        <br>
+        Average Cost for two people:{{average}}
+      </p>
+      <a href={{menu}}">Menu!</a>
+    </div>
+    <div class="col-md-4">
+      <img src="{{img}}" >
+
+    </div>
+  </div>
+</div>
+{% endblock %}

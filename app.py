@@ -24,7 +24,7 @@ except:
     print(" * Api key not valid!")
     exit()
 
-
+# Name, Address, Average Cost for Two, IFrame Menu, Thumbnail for Restaurant Car
 
 def loggedIn():
     # check if user is logged in (True if yes, False if not)
@@ -116,7 +116,21 @@ def search():
 
 @app.route("/restaurant/<id>") # Temporary Restaurant Card Depiction
 def restaurant(id):
-    return "Temp"
+    req_url = "https://developers.zomato.com/api/v2.1/restaurant?res_id=" + id
+    header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "user_key": ZOMATO_KEY}
+    req = urllib.request.Request(req_url, headers = header)
+    json_response = json.loads(urllib.request.urlopen(req).read())
+    #print(json_response)
+    location = json_response['location']
+    loc = location['address'] + location['city'] + str(location['zipcode'])
+    av = str(json_response['average_cost_for_two']) + json_response['currency']
+    return render_template('restaurants.html',
+                            name = json_response["name"],
+                            address = loc,
+                            average = av,
+                            menu = json_response["menu_url"],
+                            img = json_response['thumb'])
+
 
 @app.route("/recipe/<id>") # Temporary Recipe Card Depiction
 def recipe(id):
