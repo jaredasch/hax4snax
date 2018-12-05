@@ -133,7 +133,7 @@ def restaurant(id):
     json_response = json.loads(urllib.request.urlopen(req).read())
     #print(json_response)
     location = json_response['location']
-    loc = location['address'] + location['city'] + str(location['zipcode'])
+    loc = location['address'] + " " + location['city'] + " " + str(location['zipcode'])
     av = str(json_response['average_cost_for_two']) + json_response['currency']
     return render_template('restaurants.html',
                             name = json_response["name"],

@@ -1,22 +1,20 @@
-{% extends "base2.html" %}
+{% extends "base.html" %}
+
+{% block title %} {{name}} {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-2">
-    </div>
-    <div class="col-md-4">
-      <h1>{{name}}</h1>
-      <p>Adress:{{address}}
-        <br>
-        Average Cost for two people:{{average}}
-      </p>
-      <a href={{menu}}">Menu!</a>
-    </div>
-    <div class="col-md-4">
-      <img src="{{img}}" >
+<h1 style = "margin: 20px auto 0;">{{name}}</h1>
+    <div class = "row" style = "padding: 10px">
+        <div class = "col-lg-7 col-md-6 col-sm-12" style = "padding: 30px">
+            <h3 style = "margin: 10px auto;">Address</h3>
+            <p>{{address}}
+            <br>
+            Average cost for Two: {{average}}
+          </p>
 
+        </div>
+        <div class = "col-lg-5 col-md-6 col-sm-12" style = "padding: 30px">
+            <img src="{{img}}" style="width:500px;height:600px;">
+        </div>
     </div>
-  </div>
-</div>
 {% endblock %}
