@@ -146,3 +146,9 @@ Clicking on a restaurant now actually takes you somewhere
 Still have to spruce up the css and find a way to make the
 menu look nicer
 ==============================================================
+
+aschJ -- 2018-12-04 23:19
+--------------------------------------------------------------
+Created a universal base.html to be used by all pages (includes navbar)
+Clicking on recipe takes user to recipe page
+==============================================================
