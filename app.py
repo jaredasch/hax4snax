@@ -5,7 +5,6 @@ from flask import Flask, render_template, request, url_for,flash,session,redirec
 from passlib.hash import md5_crypt #Local application
 from util import baseHelpers as db
 
-
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
 
@@ -24,11 +23,17 @@ except:
     print(" * Api key not valid!")
     exit()
 
+# Enum values for inserting favorites into db
+RESTAURANT = 0;
+RECIPE = 1;
+
 # Name, Address, Average Cost for Two, IFrame Menu, Thumbnail for Restaurant Car
 
 def loggedIn():
     # check if user is logged in (True if yes, False if not)
     return "username" in session
+
+
 @app.route("/") # Landing page
 def index():
     # Our default home page before a user is logged in is to display the most popular restaurants
@@ -37,7 +42,8 @@ def index():
     req = urllib.request.Request(req_url, headers = header) # here we connect to the Zomato API to get restaurant info
     json_response = json.loads(urllib.request.urlopen(req).read())
     popular_restaurants = [{"title": restaurant["restaurant"]["name"], "img": restaurant["restaurant"]["featured_image"], "link": url_for("restaurant", id=restaurant["restaurant"]["R"]["res_id"]), "desc": ("%s<br><strong>Tags: </strong> %s") % (restaurant["restaurant"]["location"]["address"], restaurant["restaurant"]["cuisines"])} for restaurant in json_response["restaurants"]]
-    return render_template('index.html', results=popular_restaurants)
+    return render_template('index.html', results=popular_restaurants, user=session.get("username"))
+
 
 @app.route("/login") # Login Page
 def login():
@@ -46,6 +52,7 @@ def login():
         return redirect(url_for('index'))
     # if the user is not logged in, it renders the static login template
     return render_template('login.html')
+
 
 @app.route("/auth", methods = ["POST"]) # Authentification Page
 def auth():
@@ -62,10 +69,12 @@ def auth():
         flash("Invalid username") # display error message
     return redirect(url_for('login')) # send back to login page
 
+
 @app.route("/register") # Register Page
 def register():
     # renders the static register page
     return render_template("register.html")
+
 
 @app.route("/registerAuth", methods = ["POST"])
 def registerAuth(): # Register Authentification Page
@@ -86,6 +95,7 @@ def registerAuth(): # Register Authentification Page
         db.add_user(username, md5_crypt.encrypt(password))
         flash("Successfully Registered, Now Sign In!")
         return redirect(url_for('login'))
+
 
 @app.route("/logout") # Logout Function
 def logout():
@@ -114,6 +124,7 @@ def search():
         results.extend([{"title": recipe["title"], "img": recipe["image_url"], "link": url_for("recipe", id=recipe["recipe_id"]), "desc": "from %s" % (recipe["publisher"])} for recipe in json_response["recipes"]])
     return render_template('index.html', results=results);
 
+
 @app.route("/restaurant/<id>") # Temporary Restaurant Card Depiction
 def restaurant(id):
     req_url = "https://developers.zomato.com/api/v2.1/restaurant?res_id=" + id
@@ -134,7 +145,10 @@ def restaurant(id):
 
 @app.route("/recipe/<id>") # Temporary Recipe Card Depiction
 def recipe(id):
-    return "Temp"
+    req_url = "https://www.food2fork.com/api/get?" + urllib.parse.urlencode({"key": FOOD2FORK_KEY, "rId": id})
+    req = urllib.request.Request(req_url, headers = {"User-agent": "curl/7.43.0"})
+    json_response = json.loads(urllib.request.urlopen(req).read())
+    return render_template("recipe.html", recipe=json_response["recipe"])
 
 # @app.route("/recipe")
 # def recipe():

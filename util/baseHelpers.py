@@ -1,6 +1,11 @@
 import sqlite3
 DB_FILE = "data/base.db"
 
+# Enum values for inserting into db
+RESTAURANT = 0;
+RECIPE = 1;
+
+
 def add_user(username,password):
     '''adds users to use table'''
     db = sqlite3.connect(DB_FILE)
@@ -9,6 +14,7 @@ def add_user(username,password):
     c.execute(command,(username,password))
     db.commit()
     db.close()
+
 
 def get_all_user_data():
     '''gets all user data into a dict'''
@@ -23,6 +29,7 @@ def get_all_user_data():
         dict[item[0]] = item[1]
     return dict
 
+
 def getUserId(username):
     '''gets user id based on username'''
     db = sqlite3.connect(DB_FILE)
@@ -33,7 +40,8 @@ def getUserId(username):
     db.close()
     return user_id[0][0]
 
-def add_favorite(username,recipe_id,api):
+
+def add_favorite(username, recipe_id, type):
     '''adds a favorited recipe to the favorites table'''
     favs = get_all_user_Recipes(username)
     if recipe_id in favs:
@@ -44,7 +52,6 @@ def add_favorite(username,recipe_id,api):
     c.execute(command,(username,recipe_id,api))
     db.commit()
     db.close()
-
 
 
 def get_all_user_Recipes(username):
@@ -61,6 +68,7 @@ def get_all_user_Recipes(username):
         fav.append(each[0])
     return fav
 
+
 def get_all_user_Api(username):
     '''gets all of the apis associated with a recipeid in a list'''
     db = sqlite3.connect(DB_FILE)
@@ -74,6 +82,8 @@ def get_all_user_Api(username):
     for each in favs:
         api = api + each[0]
     return api
+
+
 def get_recipeApi_dict(username):
     '''returns a dict of recipe_id:api key:value for a particular user'''
     db = sqlite3.connect(DB_FILE)
