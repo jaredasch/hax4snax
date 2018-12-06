@@ -4,17 +4,32 @@
 
 {% block content %}
 <h1>Favorited Recipes</h1>
+
 {% if not recipeDict %}
 <a style = "color: crimson; font-weight: 300; padding-left: 15px;" class="nav-link" href="/">You haven't selected any yet. Go find your favorites!</a>
 {% endif %}
+
 {% for item in recipeDict %}
-<a style = "color: crimson; font-weight: 300; padding-left: 15px;" class="nav-link" href="/recipe/{{recipeDict[item]}}">{{item}}</a>
+<a style = "color: crimson; font-weight: 300; padding-left: 15px;" class="nav-link" href="/recipe/{{recipeDict[item][0]}}">{{item}}</a>
+
 {% endfor %}
+
 <h1>Favorited Restaurants</h1>
+
 {% if not resDict %}
 <a style = "color: crimson; font-weight: 300; padding-left: 15px;" class="nav-link" href="/">You haven't selected any yet. Go find your favorites!</a>
 {% endif %}
-{% for item in resDict %}
-<a style = "color: crimson; font-weight: 300; padding-left: 15px;" class="nav-link" href="/restaurant/{{resDict[item]}}">{{item}}</a>
-{% endfor %}
+<div class = "row">
+	{% for item in resDict %}
+	<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" style="padding:10px;">
+		<div class = "card">
+			<div class = "img-container" style="padding-top: 75%; background-size: cover; background-position: center; background-image: url('{{resDict[item][1]}}')"></div>
+			<div class="card-body" style="height: 100%;">
+				<h5 class="card-title">{{ item }}</h5>
+				<a href="/restaurant/{{resDict[item][0]}}" style="color: crimson;">More Info</a>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+</div>
 {% endblock %}

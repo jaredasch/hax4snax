@@ -231,7 +231,7 @@ def favorite():
             json_response = json.loads(urllib.request.urlopen(req).read())
 
             location = json_response["restaurant"]
-            resDict[location['name']] = id
+            resDict[location['name']] = (id,location['logoUrl'])
         else:
             recipeDict ={}
 
