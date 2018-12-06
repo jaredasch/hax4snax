@@ -49,7 +49,7 @@ def index():
     popular_restaurants = [{"title": restaurant["name"],
                             "img": restaurant["logoUrl"],
                             "link": url_for("restaurant", id=restaurant["apiKey"]),
-                            "desc": ("%s<br><strong>Tags: </strong> %s") % (restaurant["streetAddress"], restaurant["foodTypes"])}
+                            "desc": ("%s<br><strong>Tags: </strong> %s") % (restaurant["streetAddress"], ", ".join(str(x) for x in restaurant["foodTypes"]))}
                             for restaurant in json_response["restaurants"]]
     return render_template('index.html', results=popular_restaurants, user=session.get("username"))
 
@@ -168,24 +168,29 @@ def restaurant(id):
     json_response = json.loads(urllib.request.urlopen(req).read())
 
     #retrieves menu items
-    base_menu = json_response[0]["items"]
-    # print(base_menu)
-    menu_items = []
-    for item in base_menu:
-        #print (item)
-        menu_items.append({"title" : item["name"], "price": '${:,.2f}'.format(item["basePrice"]), "description": None } )
+    base_menu = {}
+    #print(json_response)
+    for type in json_response:
+        base_menu[type["name"]] = type["items"]
 
-        if 'description' in item:
-            menu_items[0].update({"description" :item['description']})
+    menu_items = []
+    for category in base_menu:
+        #print (item)
+        #print (category)
+        for item in base_menu[category]:
+            print (item)
+            menu_items.append({"title" : item["name"], "price": '${:,.2f}'.format(item["basePrice"]), "description": None } )
+
+            if 'description' in item:
+                menu_items[0].update({"description" :item['description']})
     # print (menu_items)
-    #if description in
-    #av = str(json_response['average_cost_for_two']) + json_response['currency']
+
     return render_template('restaurants.html',
                             name = location['name'],
                             address = loc,
                             menu = menu_items,
                             img = location['logoUrl'])
-                            #img = json_response['thumb'])
+
 
 
 
