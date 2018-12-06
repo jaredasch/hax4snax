@@ -5,14 +5,14 @@
 {% block content %}
 <h1>Favorited Recipes</h1>
 {% if not recipeDict %}
-<a style = "color: crimson; font-weight: 300; padding-left: 15px;" class="nav-link" href="/">You haven't favorited any recipes go favorite some!</a>
+<a style = "color: crimson; font-weight: 300; padding-left: 15px;" class="nav-link" href="/">You haven't selected any yet. Go find your favorites!</a>
 {% endif %}
 {% for item in recipeDict %}
 <a style = "color: crimson; font-weight: 300; padding-left: 15px;" class="nav-link" href="/recipe/{{recipeDict[item]}}">{{item}}</a>
 {% endfor %}
 <h1>Favorited Restaurants</h1>
 {% if not resDict %}
-<a style = "color: crimson; font-weight: 300; padding-left: 15px;" class="nav-link" href="/">You haven't favorited any restaurants go favorite some!</a>
+<a style = "color: crimson; font-weight: 300; padding-left: 15px;" class="nav-link" href="/">You haven't selected any yet. Go find your favorites!</a>
 {% endif %}
 {% for item in resDict %}
 <a style = "color: crimson; font-weight: 300; padding-left: 15px;" class="nav-link" href="/restaurant/{{resDict[item]}}">{{item}}</a>
