@@ -13,6 +13,8 @@ with open('api.json', 'r') as file:
 
 EATSTREET_KEY = api_dict["EATSTREET_KEY"]
 FOOD2FORK_KEY = api_dict["FOOD2FORK_KEY"]
+MASHAPE_KEY = api_dict["MASHAPE_KEY"]
+
 #test for a bad key then stop the app if it doesnt work
 try:#as we incorporate more api just insert something that works when the api key works so when a bad key is used we'll know
     req_url = "https://api.eatstreet.com/publicapi/v1/restaurant/search?method=both&pickup-radius=100&search=pancake&street-address=26+E+63rd+St,+New+York,+NY+10065c"
@@ -134,11 +136,17 @@ def search():
         return render_template('index.html', results=popular_restaurants, user=session.get("username"))
     #----------------------------------------------------------------------
     if request.form.get("recipes"):
-        req_url = "https://www.food2fork.com/api/search?" + urllib.parse.urlencode({"key": FOOD2FORK_KEY, "q": query})
-        req = urllib.request.Request(req_url, headers = {"User-agent": "curl/7.43.0"})
+        req_url = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?instructionsRequired=true&limitLicense=false&number=20&offset=0&query=' + query
+        headers = {"X-Mashape-Key": MASHAPE_KEY, "Accept": "application/json", "User-agent": "curl/7.43.0"}
+        req = urllib.request.Request(req_url, headers = headers)
         json_response = json.loads(urllib.request.urlopen(req).read())
-        # json_response = json.loads(RECIPE_DATA) ## For testing from local data to reduce API calls
-        results.extend([{"title": recipe["title"], "img": recipe["image_url"], "link": url_for("recipe", id=recipe["recipe_id"]), "desc": "from %s" % (recipe["publisher"])} for recipe in json_response["recipes"]])
+
+        recipes = [{"title": recipe["title"],
+                    "img": json_response["baseUri"] + recipe["imageUrls"][0],
+                    "link": url_for("recipe", id=recipe["id"]),
+                    "desc": ("%s minutes<br>Serves %s") % (recipe["readyInMinutes"], recipe["servings"])}
+                    for recipe in json_response["results"]]
+        results.extend(recipes)
     return render_template('index.html', results=results);
 
 
@@ -161,15 +169,15 @@ def restaurant(id):
 
     #retrieves menu items
     base_menu = json_response[0]["items"]
-    print(base_menu)
+    # print(base_menu)
     menu_items = []
     for item in base_menu:
         #print (item)
         menu_items.append({"title" : item["name"], "price": '${:,.2f}'.format(item["basePrice"]), "description": None } )
-    
+
         if 'description' in item:
             menu_items[0].update({"description" :item['description']})
-    print (menu_items)
+    # print (menu_items)
     #if description in
     #av = str(json_response['average_cost_for_two']) + json_response['currency']
     return render_template('restaurants.html',
@@ -183,10 +191,11 @@ def restaurant(id):
 
 @app.route("/recipe/<id>") # Temporary Recipe Card Depiction
 def recipe(id):
-    req_url = "https://www.food2fork.com/api/get?" + urllib.parse.urlencode({"key": FOOD2FORK_KEY, "rId": id})
-    req = urllib.request.Request(req_url, headers = {"User-agent": "curl/7.43.0"})
+    req_url = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/' + id + '/analyzedInstructions'
+    headers = {"X-Mashape-Key": MASHAPE_KEY, "Accept": "application/json", "User-agent": "curl/7.43.0"}
+    req = urllib.request.Request(req_url, headers = headers)
     json_response = json.loads(urllib.request.urlopen(req).read())
-    return render_template("recipe.html", recipe=json_response["recipe"])
+    return "In Progress"
 
 
 if __name__ == "__main__" : # Run the App

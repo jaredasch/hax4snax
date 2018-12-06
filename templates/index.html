@@ -33,9 +33,9 @@
 	<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" style="padding:10px;">
 		<div class = "card">
 			{% if item.img %}
-				<div class = "img-container" style="padding-top: 50%; background-size: cover; background-position: center; background-image: url('{{ item.img }}')"></div>
+				<div class = "img-container" style="padding-top: 75%; background-size: cover; background-position: center; background-image: url('{{ item.img }}')"></div>
 			{% else %}
-				<div class = "img-container" style="padding-top: 50%; background-size: contain; background-position: center; background-image: url({{ url_for('static', filename='img/no_image_available.png') }}); background-repeat: no-repeat;"></div>
+				<div class = "img-container" style="padding-top: 75%; background-size: contain; background-position: center; background-image: url({{ url_for('static', filename='img/no_image_available.png') }}); background-repeat: no-repeat;"></div>
 			{% endif %}
 			<div class="card-body" style="height: 100%;">
 				<h5 class="card-title">{{ item.title }}</h5>
