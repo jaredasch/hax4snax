@@ -7,12 +7,21 @@
     <div class = "row" style = "padding: 10px">
         <div class = "col-lg-7 col-md-6 col-sm-12" style = "padding: 30px">
             <h3 style = "margin: 10px auto;">Address</h3>
-            <p>{{address}}
+            {{address}}
+              <br> <br> <br>
+              <!-- Average Cost for two people:{{average}}
+            </p>
+            <a href={{menu}}">Menu!</a>-->
+            <h3> Daily Menu </h3>
+          {% for item in menu %}
+            {{ item['title'] }} -----------  {{ item['price'] }}
             <br>
-            Average cost for Two: {{average}}
-          </p>
-
-        </div>
+            {% if item['description'] is not none %}
+              {{ item['description']}}<br>
+            {% endif %}
+            <br>
+          {% endfor %}
+          </div>
         <div class = "col-lg-5 col-md-6 col-sm-12" style = "padding: 30px">
             <img src="{{img}}" style="width:500px;height:600px;">
         </div>

@@ -112,11 +112,31 @@ narangA -- 2018-11-30 12:55
 --------------------------------------------------------------
 Added base case for logout, fixed import structure
 
+zhaoM -- 2018-11-30 12:56
+--------------------------------------------------------------
+Started on accessing daily menu for the restaurants found on Zomato.
+==============================================================
+
+zhaoM -- 2018-12-01 15:00
+--------------------------------------------------------------
+Realized that the Zomato API does not support daily menu for all
+  restaurants on the API (returns an empty daily menu). Looking for
+  new restaurant menu APIs.
 ==============================================================
 
 narangA -- 2018-12-02 13:32
 --------------------------------------------------------------
 Created Requirements.txt
+
+zhaoM -- 2018-12-03 19:00
+--------------------------------------------------------------
+Possible restaurant APIs -- NYPL database (problem: all menus are
+  images), Foodsquare API (problem: has venues that are not always
+  restaurants, not all restaurants have menu information), Locu API
+  (problem: no registration), openmenu API (problem: no longer free),
+  Gipsee API (not for private consumers), EatStreet API
+Possible nutrition/recipe APIs -- Nutrionix, spoonacular(needs credit
+  card to access)
 ==============================================================
 
 cwalinaP -- 2018-12-03 13:15
@@ -151,4 +171,13 @@ aschJ -- 2018-12-04 23:19
 --------------------------------------------------------------
 Created a universal base.html to be used by all pages (includes navbar)
 Clicking on recipe takes user to recipe page
+
+zhaoM -- 2018-12-04 23:30
+--------------------------------------------------------------
+Finished writing 411s for Spoonacular, Walmart, and EatStreet APIs.
 ==============================================================
+
+zhaoM -- 2018-12-5 21:15
+--------------------------------------------------------------
+Basic restaurant menus completed, with descriptions where possible.
+Still need to do: link each item on menu to a search; css

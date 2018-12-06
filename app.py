@@ -11,12 +11,13 @@ app.secret_key = os.urandom(32)
 with open('api.json', 'r') as file:
     api_dict = json.load(file)
 
-ZOMATO_KEY = api_dict["ZOMATO_KEY"]
+EATSTREET_KEY = api_dict["EATSTREET_KEY"]
 FOOD2FORK_KEY = api_dict["FOOD2FORK_KEY"]
 #test for a bad key then stop the app if it doesnt work
 try:#as we incorporate more api just insert something that works when the api key works so when a bad key is used we'll know
-    req_url = "https://developers.zomato.com/api/v2.1/search?entity_id=280&entity_type=city&sort=rating&order=desc"
-    header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "user_key": ZOMATO_KEY}
+    req_url = "https://api.eatstreet.com/publicapi/v1/restaurant/search?method=both&pickup-radius=100&search=pancake&street-address=26+E+63rd+St,+New+York,+NY+10065c"
+    header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "X-Access-Token": EATSTREET_KEY}
+
     req = urllib.request.Request(req_url, headers = header) # here we connect to the Zomato API to get restaurant info
     json_response = json.loads(urllib.request.urlopen(req).read())
 except:
@@ -37,13 +38,21 @@ def loggedIn():
 @app.route("/") # Landing page
 def index():
     # Our default home page before a user is logged in is to display the most popular restaurants
-    req_url = "https://developers.zomato.com/api/v2.1/search?entity_id=280&entity_type=city&sort=rating&order=desc"
-    header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "user_key": ZOMATO_KEY}
+    req_url = "https://api.eatstreet.com/publicapi/v1/restaurant/search?method=both&pickup-radius=100&search=pancake&street-address=26+E+63rd+St,+New+York,+NY+10065c"
+    header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "X-Access-Token": EATSTREET_KEY}
     req = urllib.request.Request(req_url, headers = header) # here we connect to the Zomato API to get restaurant info
     json_response = json.loads(urllib.request.urlopen(req).read())
-    popular_restaurants = [{"title": restaurant["restaurant"]["name"], "img": restaurant["restaurant"]["featured_image"], "link": url_for("restaurant", id=restaurant["restaurant"]["R"]["res_id"]), "desc": ("%s<br><strong>Tags: </strong> %s") % (restaurant["restaurant"]["location"]["address"], restaurant["restaurant"]["cuisines"])} for restaurant in json_response["restaurants"]]
+    restaurant = json_response['restaurants'][:30]
+
+    popular_restaurants = [{"title": restaurant["name"],
+                            "img": restaurant["logoUrl"],
+                            "link": url_for("restaurant", id=restaurant["apiKey"]),
+                            "desc": ("%s<br><strong>Tags: </strong> %s") % (restaurant["streetAddress"], restaurant["foodTypes"])}
+                            for restaurant in json_response["restaurants"]]
     return render_template('index.html', results=popular_restaurants, user=session.get("username"))
 
+    #print (restaurant)
+    #return ("wow")
 
 @app.route("/login") # Login Page
 def login():
@@ -111,11 +120,19 @@ def search():
     query = request.form.get("query")
     results = []
     if request.form.get("restaurants"):
-        req_url = "https://developers.zomato.com/api/v2.1/search?entity_id=280&entity_type=city&q=" + query
-        header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "user_key": ZOMATO_KEY}
+        req_url = "https://api.eatstreet.com/publicapi/v1/restaurant/search?method=both&pickup-radius=100&search="+query+"&street-address=26+E+63rd+St,+New+York,+NY+10065c"
+        header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "X-Access-Token": EATSTREET_KEY}
         req = urllib.request.Request(req_url, headers = header)
         json_response = json.loads(urllib.request.urlopen(req).read())
-        results.extend([{"title": restaurant["restaurant"]["name"], "img": restaurant["restaurant"]["featured_image"], "link": url_for("restaurant", id=restaurant["restaurant"]["R"]["res_id"]), "desc": ("%s<br><strong>Tags: </strong> %s") % (restaurant["restaurant"]["location"]["address"], restaurant["restaurant"]["cuisines"])} for restaurant in json_response["restaurants"]])
+        restaurant = json_response['restaurants'][:30]
+
+        popular_restaurants = [{"title": restaurant["name"],
+                                "img": restaurant["logoUrl"],
+                                "link": url_for("restaurant", id=restaurant["apiKey"]),
+                                "desc": ("%s<br><strong>Tags: </strong> %s") % (restaurant["streetAddress"], restaurant["foodTypes"])}
+                                for restaurant in json_response["restaurants"]]
+        return render_template('index.html', results=popular_restaurants, user=session.get("username"))
+    #----------------------------------------------------------------------
     if request.form.get("recipes"):
         req_url = "https://www.food2fork.com/api/search?" + urllib.parse.urlencode({"key": FOOD2FORK_KEY, "q": query})
         req = urllib.request.Request(req_url, headers = {"User-agent": "curl/7.43.0"})
@@ -127,20 +144,41 @@ def search():
 
 @app.route("/restaurant/<id>") # Temporary Restaurant Card Depiction
 def restaurant(id):
-    req_url = "https://developers.zomato.com/api/v2.1/restaurant?res_id=" + id
-    header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "user_key": ZOMATO_KEY}
+    req_url =  'https://api.eatstreet.com/publicapi/v1/restaurant/'+id
+    header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "X-Access-Token": EATSTREET_KEY}
     req = urllib.request.Request(req_url, headers = header)
     json_response = json.loads(urllib.request.urlopen(req).read())
-    #print(json_response)
-    location = json_response['location']
-    loc = location['address'] + " " + location['city'] + " " + str(location['zipcode'])
-    av = str(json_response['average_cost_for_two']) + json_response['currency']
+
+    location = json_response["restaurant"]
+
+    #retrieves location data of restaurant
+    loc = location['streetAddress'] +" "+ location['city'] + ", "+ location['state']+ " " + location['zip']
+    #----------------------------------------------------------------------
+    req_url = 'https://api.eatstreet.com/publicapi/v1/restaurant/'+id+'/menu'
+    header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "X-Access-Token": EATSTREET_KEY}
+    req = urllib.request.Request(req_url, headers = header)
+    json_response = json.loads(urllib.request.urlopen(req).read())
+
+    #retrieves menu items
+    base_menu = json_response[0]["items"]
+    print(base_menu)
+    menu_items = []
+    for item in base_menu:
+        #print (item)
+        menu_items.append({"title" : item["name"], "price": '${:,.2f}'.format(item["basePrice"]), "description": None } )
+    
+        if 'description' in item:
+            menu_items[0].update({"description" :item['description']})
+    print (menu_items)
+    #if description in
+    #av = str(json_response['average_cost_for_two']) + json_response['currency']
     return render_template('restaurants.html',
-                            name = json_response["name"],
+                            name = location['name'],
                             address = loc,
-                            average = av,
-                            menu = json_response["menu_url"],
-                            img = json_response['thumb'])
+                            menu = menu_items,
+                            img = location['logoUrl'])
+                            #img = json_response['thumb'])
+
 
 
 @app.route("/recipe/<id>") # Temporary Recipe Card Depiction
@@ -150,17 +188,6 @@ def recipe(id):
     json_response = json.loads(urllib.request.urlopen(req).read())
     return render_template("recipe.html", recipe=json_response["recipe"])
 
-# @app.route("/recipe")
-# def recipe():
-#     desc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-#     Dictionary =	{
-#     "butter": "two sticks",
-#     "tomato sauce": "two cans",
-#     "linguini": "three boxes" }
-#     return render_template('recipe.html',
-#                             img = "https://www.platingsandpairings.com/wp-content/uploads/2015/10/Fresh-Linguin-with-Roasted-Fennel-4-e1446066750773.jpg",
-#                             dict = Dictionary,
-#                             description = desc)
 
 if __name__ == "__main__" : # Run the App
     app.debug = True
