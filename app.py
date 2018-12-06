@@ -184,12 +184,61 @@ def restaurant(id):
             if 'description' in item:
                 menu_items[0].update({"description" :item['description']})
     # print (menu_items)
-
+    favorited = db.isFavorited(session.get('username'),id)
     return render_template('restaurants.html',
                             name = location['name'],
                             address = loc,
                             menu = menu_items,
-                            img = location['logoUrl'])
+                            img = location['logoUrl'],
+                            id = id,
+                            user = session.get("username"),
+                            favorited = favorited)
+@app.route("/favoriteRes/<id>")
+def favoriteRes(id):
+    if loggedIn():
+        db.add_favorite(session.get("username"),id,RESTAURANT)
+
+    return redirect("/restaurant/"+str(id))
+
+@app.route("/favoriteRecipe/<id>")
+def favoriteRecipe(id):
+    if loggedIn():
+        db.add_favorite(session.get("username"),id,RECIPE)
+
+    return redirect("/recipe/"+str(id))
+
+@app.route("/unfavoriteRes/<id>")
+def unfavoriteRes(id):
+    db.remove_fav(session.get('username'),id)
+    return redirect("/restaurant/"+str(id))
+
+@app.route("/unfavoriteRecipe/<id>")
+def unfavoriteRecipe(id):
+    db.remove_fav(session.get('username'),id)
+    return redirect("/recipe/"+str(id))
+
+
+@app.route("/favorite")
+def favorite():
+    idApiDict = db.get_idApi_dict(session.get('username'))
+    recipeDict = {}
+    resDict = {}
+    for id in idApiDict:
+        if idApiDict[id] == RESTAURANT:
+            req_url =  'https://api.eatstreet.com/publicapi/v1/restaurant/'+id
+            header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "X-Access-Token": EATSTREET_KEY}
+            req = urllib.request.Request(req_url, headers = header)
+            json_response = json.loads(urllib.request.urlopen(req).read())
+
+            location = json_response["restaurant"]
+            resDict[location['name']] = id
+        else:
+            recipeDict ={}
+
+    return render_template('favorite.html',
+                            user = session.get("username"),
+                            resDict = resDict
+                            )
 
 
 

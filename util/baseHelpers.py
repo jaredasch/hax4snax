@@ -49,9 +49,12 @@ def add_favorite(username, recipe_id, type):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
     command = "INSERT INTO favorites VALUES(?,?,?);"
-    c.execute(command,(username,recipe_id,api))
+    c.execute(command,(username,recipe_id,type))
     db.commit()
     db.close()
+def isFavorited(username,recipe_id):
+    favs = get_all_user_Recipes(username)
+    return recipe_id in favs
 
 
 def get_all_user_Recipes(username):
@@ -84,8 +87,8 @@ def get_all_user_Api(username):
     return api
 
 
-def get_recipeApi_dict(username):
-    '''returns a dict of recipe_id:api key:value for a particular user'''
+def get_idApi_dict(username):
+    '''returns a dict of id:api key:value for a particular user'''
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
     command = "SELECT recipe_id,api FROM favorites WHERE username = ?;"

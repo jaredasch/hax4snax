@@ -2,6 +2,18 @@
 
 {% block title %} {{name}} {% endblock %}
 
+{% block favButton %}
+{% if favorited %}
+<li class="nav-item">
+  <a style = "color: crimson; font-weight: 300; padding-left: 15px;" class="nav-link" href="/unfavoriteRes/{{id}}">Unfavorite This!</a>
+</li>
+{% else %}
+<li class="nav-item">
+  <a style = "color: crimson; font-weight: 300; padding-left: 15px;" class="nav-link" href="/favoriteRes/{{id}}">Favorite This!</a>
+</li>
+{% endif %}
+{% endblock %}
+
 {% block content %}
 <h1 style = "margin: 20px auto 0;">{{name}}</h1>
     <div class = "row" style = "padding: 10px">
@@ -12,6 +24,8 @@
               <!-- Average Cost for two people:{{average}}
             </p>
             <a href={{menu}}">Menu!</a>-->
+
+            
             <h3> Daily Menu </h3>
           {% for item in menu %}
             {{ item['title'] }} -----------  {{ item['price'] }}
