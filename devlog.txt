@@ -183,6 +183,11 @@ zhaoM -- 2018-12-5 21:15
 Basic restaurant menus completed, with descriptions where possible.
 Still need to do: link each item on menu to a search; css
 ==============================================================
+cwalinaP -- 2018-12-06 21:35
+--------------------------------------------------------------
+Did some back end stuff for favorites fixed some navbar shenanigans
+created favorites page and made restaurants work with it.
+==============================================================
 
 aschJ -- 2018-12-06 22:35
 --------------------------------------------------------------
