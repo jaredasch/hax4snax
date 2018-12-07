@@ -119,7 +119,7 @@ def logout():
 
 @app.route("/search", methods = ["POST"]) # Searching Functionality
 def search():
-    query = request.form.get("query")
+    query = urllib.parse.quote(request.form.get("query"))
     results = []
     if request.form.get("restaurants"):
         req_url = "https://api.eatstreet.com/publicapi/v1/restaurant/search?method=both&pickup-radius=100&search="+query+"&street-address=26+E+63rd+St,+New+York,+NY+10065c"
@@ -250,15 +250,25 @@ def favorite():
 
 @app.route("/recipe/<id>") # Temporary Recipe Card Depiction
 def recipe(id):
-    req_url = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/' + id + '/analyzedInstructions'
     headers = {"X-Mashape-Key": MASHAPE_KEY, "Accept": "application/json", "User-agent": "curl/7.43.0"}
-    req = urllib.request.Request(req_url, headers = headers)
-    json_response = json.loads(urllib.request.urlopen(req).read())
-    #for checking if favorited
+
+    instructions_url = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/' + id + '/analyzedInstructions'
+    instructions_req = urllib.request.Request(instructions_url, headers = headers)
+    instructions = json.loads(urllib.request.urlopen(instructions_req).read())
+
+    summary_url = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/' + id + '/summary'
+    summary_req = urllib.request.Request(summary_url, headers = headers)
+    summary = json.loads(urllib.request.urlopen(summary_req).read())
+
+    ingredients_url = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/' + id + '/information'
+    ingredients_req = urllib.request.Request(ingredients_url, headers = headers)
+    ingredients = json.loads(urllib.request.urlopen(ingredients_req).read())
+
     favorited = db.isFavorited(session.get('username'),id)
     #used to right nabar depending on logged in or not
     user = session.get('username')
-    return "In Progress"
+
+    return render_template("recipe.html", favorited = favorited, user=user, summary=summary, instructions=instructions[0]["steps"], ingredients = ingredients["extendedIngredients"])
 
 
 if __name__ == "__main__" : # Run the App

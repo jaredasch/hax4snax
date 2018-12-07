@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %} {{ recipe["title"] }} {% endblock %}
+{% block title %} {{ summary["title"] }} {% endblock %}
 
 {% block favButton %}
 {% if favorited %}
@@ -14,19 +14,24 @@
 {% endif %}
 {% endblock %}
 
+
+
 {% block content %}
-<h1 style = "margin: 20px auto 0;">{{ recipe["title"] }}</h1>
-    <div class = "row" style = "padding: 10px">
-        <div class = "col-lg-4 col-md-6 col-sm-12" style = "padding: 30px">
-            <h3 style = "margin: 10px auto;">Ingredients</h3>
-            <ul>
-                {% for i in recipe["ingredients"] %}
-                <li>{{ i }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div class = "col-lg-8 col-md-6 col-sm-12" style = "padding: 30px">
-            <iframe width="100%" height = "100%" style = "border: 1px crimson solid;" src = "{{ recipe['source_url'] }}"></iframe>
-        </div>
-    </div>
+
+<h1 style="margin-top: 30px;">{{ summary["title"] }}</h1>
+{{ summary["summary"] | safe }}
+<br/>
+<h2 style="margin-top: 30px;">Ingredients</h2>
+<ul>
+    {% for ingredient in ingredients %}
+    <li>{{ ingredient["originalString"] }}</li>
+    {% endfor %}
+</ul>
+<h2 style="margin-top: 30px;">Instructions</h2>
+<ol>
+    {% for step in instructions %}
+    <li>{{ step["step"] }}</li>
+    {% endfor %}
+</ol>
+
 {% endblock %}
