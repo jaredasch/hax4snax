@@ -131,7 +131,7 @@ def search():
         popular_restaurants = [{"title": restaurant["name"],
                                 "img": restaurant["logoUrl"],
                                 "link": url_for("restaurant", id=restaurant["apiKey"]),
-                                "desc": ("%s<br><strong>Tags: </strong> %s") % (restaurant["streetAddress"], restaurant["foodTypes"])}
+                                "desc": ("%s<br><strong>Tags: </strong> %s") % (restaurant["streetAddress"], ", ".join(str(x) for x in restaurant["foodTypes"]))}
                                 for restaurant in json_response["restaurants"]]
         return render_template('index.html', results=popular_restaurants, user=session.get("username"))
     #----------------------------------------------------------------------
@@ -160,7 +160,7 @@ def restaurant(id):
     location = json_response["restaurant"]
 
     #retrieves location data of restaurant
-    loc = location['streetAddress'] +" "+ location['city'] + ", "+ location['state']+ " " + location['zip']
+    loc = location['streetAddress'] +", "+ location['city'] + ", "+ location['state']+ " " + location['zip']
     #----------------------------------------------------------------------
     req_url = 'https://api.eatstreet.com/publicapi/v1/restaurant/'+id+'/menu'
     header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "X-Access-Token": EATSTREET_KEY}
@@ -177,6 +177,7 @@ def restaurant(id):
     for category in base_menu:
         #print (item)
         #print (category)
+
         for item in base_menu[category]:
             print (item)
             menu_items.append({"title" : item["name"], "price": '${:,.2f}'.format(item["basePrice"]), "description": None } )
@@ -188,7 +189,7 @@ def restaurant(id):
     return render_template('restaurants.html',
                             name = location['name'],
                             address = loc,
-                            menu = menu_items,
+                            menu = base_menu,
                             img = location['logoUrl'],
                             id = id,
                             user = session.get("username"),

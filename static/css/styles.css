@@ -85,3 +85,18 @@ body {
 .card-title {
     color: crimson;
 }
+
+.h3 {
+  color: crimson;
+}
+
+.span {
+  float: right;
+  display: inline-block;
+  text-align: right;
+}
+
+.col-lg-4{
+  height: 440px;
+  overflow-y:auto;
+}
