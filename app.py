@@ -237,12 +237,16 @@ def favorite():
             #puts the name id and picure url into a dict
             resDict[location['name']] = (id,location['logoUrl'])
         else:#it the recipe api
-            #jared use spoonacular to make the cards here you can do it
-            recipeDict ={}
+            headers = {"X-Mashape-Key": MASHAPE_KEY, "Accept": "application/json", "User-agent": "curl/7.43.0"}
+            req_url = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/' + id + '/information'
+            req = urllib.request.Request(req_url, headers = headers)
+            info = json.loads(urllib.request.urlopen(req).read())
+            recipeDict[info["title"]] = (id, info["image"])
 
     return render_template('favorite.html',
                             user = session.get("username"),#So navbar changes when logged in
-                            resDict = resDict#restuarant dict
+                            resDict = resDict,#restuarant dict
+                            recipeDict = recipeDict
                             )
 
 

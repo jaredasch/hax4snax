@@ -171,6 +171,7 @@ aschJ -- 2018-12-04 23:19
 --------------------------------------------------------------
 Created a universal base.html to be used by all pages (includes navbar)
 Clicking on recipe takes user to recipe page
+==============================================================
 
 zhaoM -- 2018-12-04 23:30
 --------------------------------------------------------------
@@ -181,3 +182,11 @@ zhaoM -- 2018-12-5 21:15
 --------------------------------------------------------------
 Basic restaurant menus completed, with descriptions where possible.
 Still need to do: link each item on menu to a search; css
+==============================================================
+
+aschJ -- 2018-12-06 22:35
+--------------------------------------------------------------
+Reworked some CSS across the site
+Created recipe information page
+Created cards for recipes in the favorites page
+==============================================================
