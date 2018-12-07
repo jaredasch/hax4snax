@@ -53,9 +53,6 @@ def index():
                             for restaurant in json_response["restaurants"]]
     return render_template('index.html', results=popular_restaurants, user=session.get("username"))
 
-    #print (restaurant)
-    #return ("wow")
-
 @app.route("/login") # Login Page
 def login():
     if loggedIn():
@@ -172,7 +169,6 @@ def restaurant(id):
     menu_items = []
     for category in base_menu:
         for item in base_menu[category]:
-            print (item)
             menu_items.append({"title" : item["name"], "price": '${:,.2f}'.format(item["basePrice"]), "description": None } )
             if 'description' in item:
                 menu_items[0].update({"description" :item['description']})
