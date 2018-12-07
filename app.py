@@ -126,8 +126,8 @@ def search():
         header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "X-Access-Token": EATSTREET_KEY}
         req = urllib.request.Request(req_url, headers = header)
         json_response = json.loads(urllib.request.urlopen(req).read())
-        restaurant = json_response['restaurants'][:30]
-
+        restaurant = json_response['restaurants'][:30] # limited to thirty, to not overwhelm the user upon first glance
+        # load the list of popular restaurants
         popular_restaurants = [{"title": restaurant["name"],
                                 "img": restaurant["logoUrl"],
                                 "link": url_for("restaurant", id=restaurant["apiKey"]),
@@ -140,7 +140,6 @@ def search():
         headers = {"X-Mashape-Key": MASHAPE_KEY, "Accept": "application/json", "User-agent": "curl/7.43.0"}
         req = urllib.request.Request(req_url, headers = headers)
         json_response = json.loads(urllib.request.urlopen(req).read())
-
         recipes = [{"title": recipe["title"],
                     "img": json_response["baseUri"] + recipe["imageUrls"][0],
                     "link": url_for("recipe", id=recipe["id"]),
@@ -150,7 +149,7 @@ def search():
     return render_template('index.html', results=results);
 
 
-@app.route("/restaurant/<id>") # Temporary Restaurant Card Depiction
+@app.route("/restaurant/<id>") # Restaurant Card Depiction
 def restaurant(id):
     req_url =  'https://api.eatstreet.com/publicapi/v1/restaurant/'+id
     header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "X-Access-Token": EATSTREET_KEY}
@@ -166,26 +165,18 @@ def restaurant(id):
     header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "X-Access-Token": EATSTREET_KEY}
     req = urllib.request.Request(req_url, headers = header)
     json_response = json.loads(urllib.request.urlopen(req).read())
-
     #retrieves menu items
     base_menu = {}
-    #print(json_response)
     for type in json_response:
         base_menu[type["name"]] = type["items"]
-
     menu_items = []
     for category in base_menu:
-        #print (item)
-        #print (category)
-
         for item in base_menu[category]:
             print (item)
             menu_items.append({"title" : item["name"], "price": '${:,.2f}'.format(item["basePrice"]), "description": None } )
-
             if 'description' in item:
                 menu_items[0].update({"description" :item['description']})
-    # print (menu_items)
-    favorited = db.isFavorited(session.get('username'),id)
+    favorited = db.isFavorited(session.get('username'),id) # Whether the restaurant is a favorite or not
     return render_template('restaurants.html',
                             name = location['name'],
                             address = loc,
@@ -194,41 +185,41 @@ def restaurant(id):
                             id = id,
                             user = session.get("username"),
                             favorited = favorited)
-@app.route("/favoriteRes/<id>")
+@app.route("/favoriteRes/<id>") # Favoriting mechanism for Restaurants
 def favoriteRes(id):
     if loggedIn():
         db.add_favorite(session.get("username"),id,RESTAURANT)
 
     return redirect("/restaurant/"+str(id))
 
-@app.route("/favoriteRecipe/<id>")
+@app.route("/favoriteRecipe/<id>") # Favoriting mechanism for Recipes
 def favoriteRecipe(id):
     if loggedIn():
         db.add_favorite(session.get("username"),id,RECIPE)
 
     return redirect("/recipe/"+str(id))
 
-@app.route("/unfavoriteRes/<id>")
+@app.route("/unfavoriteRes/<id>") # Un-favoriting mechanism for Restaurants
 def unfavoriteRes(id):
     db.remove_fav(session.get('username'),id)
     return redirect("/restaurant/"+str(id))
 
-@app.route("/unfavoriteRecipe/<id>")
+@app.route("/unfavoriteRecipe/<id>") # Un-favoriting mechanism for Recipes
 def unfavoriteRecipe(id):
     db.remove_fav(session.get('username'),id)
     return redirect("/recipe/"+str(id))
 
 
 @app.route("/favorite")
-def favorite():
-    #fetch ids and there assaciated apis
+def favorite(): # Favorites Page
+    #fetch ids and their associated apis
     idApiDict = db.get_idApi_dict(session.get('username'))
-    #dict for the recipes to be inputeded into the favs page
+    #dict for the recipes to be input into the favorites page
     recipeDict = {}
-    #dict for the restaurants to be inputeded into the favs page
+    #dict for the restaurants to be input into the favorites page
     resDict = {}
     for id in idApiDict:
-        if idApiDict[id] == RESTAURANT:#does this use a restaurant api?
+        if idApiDict[id] == RESTAURANT: # check whether this is a restaurant or not
             req_url =  'https://api.eatstreet.com/publicapi/v1/restaurant/'+id
             header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "X-Access-Token": EATSTREET_KEY}
             req = urllib.request.Request(req_url, headers = header)
@@ -250,26 +241,23 @@ def favorite():
                             recipeDict = recipeDict
                             )
 
-
-
-
-@app.route("/recipe/<id>") # Temporary Recipe Card Depiction
+@app.route("/recipe/<id>") # Recipe Card Depiction
 def recipe(id):
     headers = {"X-Mashape-Key": MASHAPE_KEY, "Accept": "application/json", "User-agent": "curl/7.43.0"}
 
     instructions_url = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/' + id + '/analyzedInstructions'
     instructions_req = urllib.request.Request(instructions_url, headers = headers)
-    instructions = json.loads(urllib.request.urlopen(instructions_req).read())
+    instructions = json.loads(urllib.request.urlopen(instructions_req).read()) # the recipe instructions
 
     summary_url = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/' + id + '/summary'
     summary_req = urllib.request.Request(summary_url, headers = headers)
-    summary = json.loads(urllib.request.urlopen(summary_req).read())
+    summary = json.loads(urllib.request.urlopen(summary_req).read()) # the recipe blurb
 
     ingredients_url = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/' + id + '/information'
     ingredients_req = urllib.request.Request(ingredients_url, headers = headers)
-    ingredients = json.loads(urllib.request.urlopen(ingredients_req).read())
+    ingredients = json.loads(urllib.request.urlopen(ingredients_req).read()) # the recipe ingredients
 
-    favorited = db.isFavorited(session.get('username'),id)
+    favorited = db.isFavorited(session.get('username'),id) # Check whether the recipe is favorited
     #used to right nabar depending on logged in or not
     user = session.get('username')
 

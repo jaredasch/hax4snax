@@ -195,3 +195,10 @@ Reworked some CSS across the site
 Created recipe information page
 Created cards for recipes in the favorites page
 ==============================================================
+
+narangA -- 2018-12-07 2:32
+--------------------------------------------------------------
+Edited the design document to better reflect changes we made to our project
+Fixed non-fluid navbar issue
+Added comments throughout App.Py
+==============================================================
