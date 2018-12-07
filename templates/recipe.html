@@ -2,6 +2,18 @@
 
 {% block title %} {{ recipe["title"] }} {% endblock %}
 
+{% block favButton %}
+{% if favorited %}
+<li class="nav-item">
+  <a style = "color: crimson; font-weight: 300; padding-left: 15px;" class="nav-link" href="/unfavoriteRecipe/{{id}}">Unfavorite This!</a>
+</li>
+{% else %}
+<li class="nav-item">
+  <a style = "color: crimson; font-weight: 300; padding-left: 15px;" class="nav-link" href="/favoriteRecipe/{{id}}">Favorite This!</a>
+</li>
+{% endif %}
+{% endblock %}
+
 {% block content %}
 <h1 style = "margin: 20px auto 0;">{{ recipe["title"] }}</h1>
     <div class = "row" style = "padding: 10px">

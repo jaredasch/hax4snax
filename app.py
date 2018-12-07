@@ -220,24 +220,29 @@ def unfavoriteRecipe(id):
 
 @app.route("/favorite")
 def favorite():
+    #fetch ids and there assaciated apis
     idApiDict = db.get_idApi_dict(session.get('username'))
+    #dict for the recipes to be inputeded into the favs page
     recipeDict = {}
+    #dict for the restaurants to be inputeded into the favs page
     resDict = {}
     for id in idApiDict:
-        if idApiDict[id] == RESTAURANT:
+        if idApiDict[id] == RESTAURANT:#does this use a restaurant api?
             req_url =  'https://api.eatstreet.com/publicapi/v1/restaurant/'+id
             header = {"User-agent": "curl/7.43.0", "Accept": "application/json", "X-Access-Token": EATSTREET_KEY}
             req = urllib.request.Request(req_url, headers = header)
             json_response = json.loads(urllib.request.urlopen(req).read())
 
             location = json_response["restaurant"]
+            #puts the name id and picure url into a dict
             resDict[location['name']] = (id,location['logoUrl'])
-        else:
+        else:#it the recipe api
+            #jared use spoonacular to make the cards here you can do it
             recipeDict ={}
 
     return render_template('favorite.html',
-                            user = session.get("username"),
-                            resDict = resDict
+                            user = session.get("username"),#So navbar changes when logged in
+                            resDict = resDict#restuarant dict
                             )
 
 
@@ -249,6 +254,10 @@ def recipe(id):
     headers = {"X-Mashape-Key": MASHAPE_KEY, "Accept": "application/json", "User-agent": "curl/7.43.0"}
     req = urllib.request.Request(req_url, headers = headers)
     json_response = json.loads(urllib.request.urlopen(req).read())
+    #for checking if favorited
+    favorited = db.isFavorited(session.get('username'),id)
+    #used to right nabar depending on logged in or not
+    user = session.get('username')
     return "In Progress"
 
 
